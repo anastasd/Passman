@@ -85,6 +85,16 @@ public class Passman {
 			}
 			__deleteAllPasswords(args[1]);
 		}
+		
+		/*
+		 */
+		if (args[0].equals("list")) {
+			if (args.length != 1) {
+				System.out.println("Funcion \"list\" needs no arguments. Example usage: list");
+				System.exit(0);
+			}
+			__listDomains();
+		}
 	}
 	
 	private static void __getPassword(String domain, String username) {
@@ -250,6 +260,21 @@ public class Passman {
 		}
 	
 		System.out.println(":: Passwords deleted");
+	}
+	
+	private static void __listDomains() {
+		Console console = System.console();
+		int i = 0;
+		
+		masterPass = new String(console.readPassword("Enter your master password for \"passman.store\" file: "));
+		
+		__parsePasswords();
+		
+		System.out.println(":: " + Integer.toString(passwords.size()) + " password(s) stored in \"passman.store\":");
+		for (i = 0; i < passwords.size(); i++) {
+			System.out.println(passwords.get(i)[0] + " : " + passwords.get(i)[1]);
+		}
+		System.out.println();
 	}
 	
 	private static void __parsePasswords() {

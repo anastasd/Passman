@@ -24,6 +24,10 @@ Example usage:
 // Deletes all passwords for <domain>:
 >>> java dv/utils/Passman delall MyDomain MyUsername
 >>> ....
+
+// Lists all domains and usernames:
+>>> java dv/utils/Passman list
+>>> ....
 ```
 
 Remove the first line of code and recompile it for simpler usage.
