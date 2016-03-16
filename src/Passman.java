@@ -8,6 +8,8 @@ import java.io.FileOutputStream;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.security.MessageDigest;
 
 import javax.crypto.Cipher;
@@ -23,11 +25,24 @@ public class Passman {
 	private static String masterPass;
 	
 	/*
-	 * @param String args[0] - "set"/"get"/"del"/"getall"/"delall"
+	 * @param String args[0] - set/get/del/getall/delall/list/look
 	 * 
 	 *
 	 */
 	public static void main(String[] args) {
+		
+		if (args.length == 0) {
+			System.out.println("Available commands:");
+			System.out.println("\tset <domain> <username> - adds a new password for <username> at <domain>. Overrides any existing");
+			System.out.println("\tget <domain> <username> - gets the password for <username> at <domain>");
+			System.out.println("\tgetall <domain> - gets all passwords at <domain>");
+			System.out.println("\tdel <domain> <username> - deletes the password for <username> at <domain>");
+			System.out.println("\tdelall <domain> - deletes all passwords at <domain>");
+			System.out.println("\tlist - lists all domains and usernames stored in the file");
+			System.out.println("\tlook <*domain*> - gets all passwords at <domain> by wildcard");
+			
+			System.exit(0);
+		}
 		/*
 		 * @param String args[1] - domain
 		 * @param String args[2] - username
@@ -95,6 +110,26 @@ public class Passman {
 			}
 			__listDomains();
 		}
+		
+		/*
+		 * @param String args[1] - domain
+		 */
+		if (args[0].equals("look")) {
+			if (args.length != 2) {
+				System.out.println("Funcion \"look\" needs one argument. Example usage: look domain");
+				System.exit(0);
+			}
+			__lookDomain(args[1]);
+		}
+		
+		System.out.println("Available commands:");
+		System.out.println("\tset <domain> <username> - adds a new password for <username> at <domain>. Overrides any existing");
+		System.out.println("\tget <domain> <username> - gets the password for <username> at <domain>");
+		System.out.println("\tgetall <domain> - gets all passwords at <domain>");
+		System.out.println("\tdel <domain> <username> - deletes the password for <username> at <domain>");
+		System.out.println("\tdelall <domain> - deletes all passwords at <domain>");
+		System.out.println("\tlist - lists all domains and usernames stored in the file");
+		System.out.println("\tlook <*domain*> - gets all passwords at <domain> by wildcard");
 	}
 	
 	private static void __getPassword(String domain, String username) {
@@ -118,6 +153,8 @@ public class Passman {
 		} else {
 			System.out.println(":: No password found for \"" + username + "\" @ \"" + domain + "\"");
 		}
+		
+		System.exit(0);
 	}
 	
 	private static void __getAllPasswords(String domain) {
@@ -144,6 +181,8 @@ public class Passman {
 		} else {
 			System.out.println(":: No passwords found for domain " + domain);
 		}
+		
+		System.exit(0);
 	}
 	
 	private static void __addPassword(String domain, String username) {
@@ -191,6 +230,8 @@ public class Passman {
 		}
 	
 		System.out.println(":: Password set");
+		
+		System.exit(0);
 	}
 	
 	private static void __deletePassword(String domain, String username) {
@@ -226,6 +267,8 @@ public class Passman {
 		}
 	
 		System.out.println(":: Password deleted");
+		
+		System.exit(0);
 	}
 	
 	private static void __deleteAllPasswords(String domain) {
@@ -260,6 +303,8 @@ public class Passman {
 		}
 	
 		System.out.println(":: Passwords deleted");
+		
+		System.exit(0);
 	}
 	
 	private static void __listDomains() {
@@ -270,17 +315,52 @@ public class Passman {
 		
 		__parsePasswords();
 		
+        Collections.sort(passwords, new Comparator<String[]>() {
+            public int compare(String[] p1, String[] p2) {
+                return p1[0].compareTo(p2[0]);
+            }
+        });
+	
 		System.out.println(":: " + Integer.toString(passwords.size()) + " password(s) stored in \"passman.store\":");
 		for (i = 0; i < passwords.size(); i++) {
 			System.out.println(passwords.get(i)[0] + " : " + passwords.get(i)[1]);
 		}
 		System.out.println();
+
+		System.exit(0);
+	}
+	
+	private static void __lookDomain(String domainc) {
+		Console console = System.console();
+		List<String[]> pwds = new ArrayList<String[]>();
+		int i = 0;
+		
+		masterPass = new String(console.readPassword("Enter your master password for \"passman.store\" file: "));
+		
+		__parsePasswords();
+		
+		for (i = 0; i < passwords.size(); i++) {
+			if (passwords.get(i)[0].toLowerCase().indexOf(domainc.toLowerCase()) > -1) {
+				pwds.add(passwords.get(i));
+			}
+		}
+		
+		if (pwds.size() > 0) {
+			System.out.println(":: " + Integer.toString(pwds.size()) + " password(s) found for domain \"*" + domainc + "*\":");
+			for (i = 0;i < pwds.size();i++) {
+				System.out.println(pwds.get(i)[0] + " > " + pwds.get(i)[1] + " : " + pwds.get(i)[2]);
+			}
+			System.out.println("");
+		} else {
+			System.out.println(":: No passwords found for domain \"*" + domainc + "*\"");
+		}
+		
+		System.exit(0);
 	}
 	
 	private static void __parsePasswords() {
 		int bte, i;
 		String contents = "";
-		
 		
         try {
 			File fin = new File("passman.store");
@@ -366,4 +446,6 @@ public class Passman {
 		
 		return new String(cipher.doFinal(cipherBytes),"UTF-8");
 	}
+	
+
 }

@@ -5,28 +5,32 @@ Creates a "passman.store" file and puts passwords in it, encrypted with AES/CBC 
 
 Example usage:
 ```Java
-// Adds a new password for <domain> and <username>. Overrides existing:
+// Adds a new password for <username> at <domain>. Overrides any existing:
 >>> java dv/utils/Passman set MyDomain MyUsername
 >>> ....
 
-// Gets the password for <domain> and <username>:
+// Gets the password for <username> at <domain>:
 >>> java dv/utils/Passman get MyDomain MyUsername
 >>> ....
 
-// Deletes the password for <domain> and <username>:
+// Deletes the password for <username> at <domain>:
 >>> java dv/utils/Passman del MyDomain MyUsername
 >>> ....
 
-// Gets all passwords for <domain>:
+// Gets all passwords at <domain>:
 >>> java dv/utils/Passman getall MyDomain
 >>> ....
 
-// Deletes all passwords for <domain>:
+// Deletes all passwords at <domain>:
 >>> java dv/utils/Passman delall MyDomain MyUsername
 >>> ....
 
-// Lists all domains and usernames:
+// Lists all domains and usernames stored in the file:
 >>> java dv/utils/Passman list
+>>> ....
+
+// Gets all passwords at <domain> by wildcard:
+>>> java dv/utils/Passman look MyDomain
 >>> ....
 ```
 
