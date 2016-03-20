@@ -1,6 +1,8 @@
 # Passman
 A very simple console password manager written in Java.
 
+
+
 ##### File mode
 Edit /dv/utils/config.txt file. Put "FILE" as "mode" and some filename after "filename". Put it into dv/utils/ folder.
 Then build sources and compile JAR file:
@@ -10,6 +12,8 @@ Then build sources and compile JAR file:
 >>> javac PassmanTransport.java -d .
 >>> jar -cvfm Passman.jar Manifest.txt dv/utils/*
 ```
+
+
 
 ##### Firebase mode
 The application can use Firebase databse to store passwords in it.
@@ -35,7 +39,9 @@ Then build sources and compile JAR file:
 >>> jar -cvfm Passman.jar Manifest.txt dv/utils/*
 ```
 
-Example usage:
+
+
+##### Example usage
 ```Java
 // Adds a new password for <username> at <domain>. Overrides any existing:
 >>> java -jar Passman.jar set MyDomain MyUsername
