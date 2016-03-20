@@ -1,5 +1,5 @@
-mode FIREBASE //mode of operation
-filename passman.store //filename if FILE is the mode
-url https://blazing-inferno-2892.firebaseio.com/passman/ //the firebase server url
-user anastas //the username for firebase server
-key plClp95TfbS2Peoneqx9yf7vUMQM9xvhm2ggDHRC //key for firebase server
+mode FILE //mode of operation
+filename filename-for-store //filename if FILE is the mode
+url endpoint-of-firebase-server //the firebase server url
+user username-in-firebase-server //the username for firebase server
+key your-firebase-key //key for firebase server

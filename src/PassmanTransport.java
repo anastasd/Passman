@@ -20,7 +20,6 @@ import javax.xml.bind.DatatypeConverter;
 
 public class PassmanTransport {
 	public List<String[]> readConfig() {
-		int i;
 		List<String[]> config = new ArrayList<String[]>();
 		String configSrc = "";
 		
@@ -41,7 +40,6 @@ public class PassmanTransport {
 	
 	public String[] readFromFile(String filename) {
 		String[] filedata = new String[2];
-		int i;
 		
         try {
 			File fin = new File(filename);
@@ -65,7 +63,6 @@ public class PassmanTransport {
 	}
 	
 	public void writeToFile(String filename, String initVector, String pemCode) {
-		int i;
 		String strOut = "";
 		File fout = new File(filename);
 		
@@ -84,6 +81,43 @@ public class PassmanTransport {
             outStr.write(("# Passwords' manager storage file. Don't edit it!\n" + initVector + "\n" + String.join("\n", chunks)).getBytes("UTF-8"));
             outStr.close();
         } catch (Exception ex) { }
+	}
+	
+	public void exportToFile(String filename, String strOut) {
+		File fout = new File(filename);
+		
+        if (!fout.exists()) {
+            try {
+                fout.createNewFile();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+		
+        try {
+            FileOutputStream outStr = new FileOutputStream(fout);
+            outStr.write(strOut.getBytes("UTF-8"));
+            outStr.close();
+        } catch (Exception ex) { }
+	}
+	
+	public String importFromFile(String filename) {
+		String strIn = "";
+		
+        try {
+			File fin = new File(filename);
+			if (fin.exists()) {
+				byte[] bytes = new byte[(int) fin.length()];
+				FileInputStream inStr = new FileInputStream(fin);
+				inStr.read(bytes);
+				inStr.close();
+				
+				strIn = new String(bytes);
+			}
+
+        } catch (Exception ex) { }
+		
+		return strIn;
 	}
 	
 	public String[] readFromFirebase(String url, String user, String key) {

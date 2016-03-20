@@ -276,8 +276,62 @@ public class Passman {
 			System.exit(0);
 		}
 		
+		if (args[0].equals("export")) {
+			if (args.length != 2) {
+				System.out.println("Command \"export\" needs one argument. Example usage: export name-of-tab-separated-file\n");
+				System.exit(0);
+			}
+			
+			String masterPass = new String(console.readPassword("Enter your master password: "));
+			PassmanCRUD pcrud = new PassmanCRUD(masterPass, passData[0], passData[1]);
+			ptrans.exportToFile(new String(args[1]), pcrud.exportPasswords());
+			
+			System.out.println(":: Passwords exported to \"" + args[1] + "\"\n");
+			
+			System.exit(0);
+		}
+		
+		if (args[0].equals("import")) {
+			if (args.length != 2) {
+				System.out.println("Command \"import\" needs one argument. Example usage: export filename\n");
+				System.exit(0);
+			}
+			
+			String masterPass = new String(console.readPassword("Enter your master password: "));
+			PassmanCRUD pcrud = new PassmanCRUD(masterPass, passData[0], passData[1]);
+			
+			if (pcrud.errCode == 1) {
+				String confirmOverwrite1 = new String(console.readLine("The destination source was decrypted with errors. If you continue any existing passwords will be lost. Do you want to continue? [N/y]"));
+				
+				if (!confirmOverwrite1.equals("y")) {
+					System.exit(0);
+				}
+			}
+			
+			String confirmOverwrite2 = new String(console.readLine("WARNING!. In case of username collisions, the existing passwords will be overwritten. Do you want to continue? [N/y]"));
+			
+			if (!confirmOverwrite2.equals("y")) {
+				System.exit(0);
+			}
+			
+			pcrud.importPasswords(ptrans.importFromFile(new String(args[1])));
+			
+			switch (pmode) {
+				case FILE:
+					ptrans.writeToFile(pfilename, pcrud.IV, pcrud.PEM);
+					break;
+				case FIREBASE:
+					ptrans.writeToFirebase(purl, puser, pkey, pcrud.IV, pcrud.PEM);
+					break;
+			}
+			
+			System.out.println(":: Passwords imported from \"" + args[1] + "\"\n");
+			
+			System.exit(0);
+		}
+		
 		System.out.println("Available commands:");
-		System.out.println("\tset <domain> <username> - adds a new password for <username> at <domain>. Overrides any existing");
+		System.out.println("\tset <domain> <username> - adds a new password for <username> at <domain>. Overwrites any existing");
 		System.out.println("\tget <domain> <username> - gets the password for <username> at <domain>");
 		System.out.println("\tgetall <domain> - gets all passwords at <domain>");
 		System.out.println("\tdel <domain> <username> - deletes the password for <username> at <domain>");

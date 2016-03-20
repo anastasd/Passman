@@ -175,6 +175,53 @@ public class PassmanCRUD {
 		return pwds;
 	}
 	
+	public String exportPasswords() {
+		String strOut = "";
+		int i = 0;
+
+		for (i = 0; i < passwords.size(); i++) {
+			strOut += String.join("\t", passwords.get(i)) + "\n";
+		}
+		
+		return strOut;
+	}
+	
+	public void importPasswords(String strIn) {
+		String[] lines = strIn.trim().split("\n");
+		String strOut = "";
+		Boolean exists = false;
+		int i = 0, j = 0;
+		
+		for (i = 0; i < lines.length; i++) {
+			String[] password = lines[i].split("\t");
+			if (!password[0].trim().equals("")) {
+				exists = false;
+				for (j = 0;j < passwords.size();j++) {
+					if (passwords.get(j)[0].toLowerCase().equals(password[0].toLowerCase()) && passwords.get(j)[1].toLowerCase().equals(password[1].toLowerCase())) {
+						exists = true;
+						break;
+					}
+				}
+				
+				if (exists == true) {
+					passwords.set(j, new String[] {password[0], password[1], password[2]});
+				} else {
+					passwords.add(new String[] {password[0], password[1], password[2]});
+				}
+			}
+		}
+		
+		for (i = 0; i < passwords.size(); i++) {
+			strOut += String.join("\t", passwords.get(i)) + "\n";
+		}
+
+		try {
+			PEM = DatatypeConverter.printBase64Binary(__encrypt(strOut.trim()));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+	}
+	
 	/*
 	 * Source from https://gist.github.com/bricef/2436364
 	 *
