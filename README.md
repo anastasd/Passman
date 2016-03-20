@@ -1,37 +1,67 @@
 # Passman
 A very simple console password manager written in Java.
 
-Creates a file and puts passwords in it, encrypted with AES/CBC and protected by a master password.
+`File mode`
+Edit /dv/utils/config.txt file. Put "FILE" as "mode" and some filename after "filename". Put it into dv/utils/ folder.
+Then build sources and compile JAR file:
+```
+>>> javac Passman.java -d .
+>>> javac PassmanCRUD.java -d .
+>>> javac PassmanTransport.java -d .
+>>> jar -cvfm Passman.jar Manifest.txt dv/utils/*
+```
+
+`Firebase mode`
+The application can use Firebase databse to store passwords in it.
+Set up your account: https://www.firebase.com/ and create a "secret". Edit the rules and allow only authenticated requests:
+```
+{
+  "rules": {
+    "passman": {
+      "anastas": {
+        ".read": "auth != null",
+        ".write": "auth != null"
+      }
+    }
+  }
+}
+```
+Create a DB and user. Make sure you put the endpoints correctly in the config.txt file. The application appends "json" to the endpoint as well as your secret.
+Then build sources and compile JAR file:
+```
+>>> javac Passman.java -d .
+>>> javac PassmanCRUD.java -d .
+>>> javac PassmanTransport.java -d .
+>>> jar -cvfm Passman.jar Manifest.txt dv/utils/*
+```
 
 Example usage:
 ```Java
 // Adds a new password for <username> at <domain>. Overrides any existing:
->>> java dv/utils/Passman set MyDomain MyUsername
+>>> java -jar Passman.jar set MyDomain MyUsername
 >>> ....
 
 // Gets the password for <username> at <domain>:
->>> java dv/utils/Passman get MyDomain MyUsername
+>>> java -jar Passman.jar get MyDomain MyUsername
 >>> ....
 
 // Deletes the password for <username> at <domain>:
->>> java dv/utils/Passman del MyDomain MyUsername
+>>> java -jar Passman.jar del MyDomain MyUsername
 >>> ....
 
 // Gets all passwords at <domain>:
->>> java dv/utils/Passman getall MyDomain
+>>> java -jar Passman.jar getall MyDomain
 >>> ....
 
 // Deletes all passwords at <domain>:
->>> java dv/utils/Passman delall MyDomain MyUsername
+>>> java -jar Passman.jar delall MyDomain MyUsername
 >>> ....
 
 // Lists all domains and usernames stored in the file:
->>> java dv/utils/Passman list
+>>> java -jar Passman.jar list
 >>> ....
 
 // Gets all passwords at <domain> by wildcard:
->>> java dv/utils/Passman look MyDomain
+>>> java -jar Passman.jar look MyDomain
 >>> ....
 ```
-
-Remove the first line of code and recompile it for simpler usage.
