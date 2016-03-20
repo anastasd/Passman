@@ -1,2 +1,4 @@
+Manifest-Version: 1.0
+Created-By: Anastas Dolushanov<adolushanov@gmail.com>
 Main-Class: dv.utils.Passman
 

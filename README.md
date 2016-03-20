@@ -1,7 +1,7 @@
 # Passman
 A very simple console password manager written in Java.
 
-Creates a "passman.store" file and puts passwords in it, encrypted with AES/CBC and protected by a master password.
+Creates a file and puts passwords in it, encrypted with AES/CBC and protected by a master password.
 
 Example usage:
 ```Java
