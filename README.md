@@ -67,4 +67,12 @@ Then build sources and compile JAR file:
 // Gets all passwords at <domain> by wildcard:
 >>> java -jar Passman.jar look MyDomain
 >>> ....
+
+// Exports all passwords to a file:
+>>> java -jar Passman.jar export FileName
+>>> ....
+
+// Imports passwords from a tab-delimited file:
+>>> java -jar Passman.jar import FileName
+>>> ....
 ```
